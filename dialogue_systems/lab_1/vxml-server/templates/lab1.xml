@@ -3,6 +3,21 @@
 <vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
       xmlns:voxeo="http://community.voxeo.com/xmlns/vxml">
 
+  <link next="lab1">
+  <grammar mode="voice" version="1.0" root="root">
+    <rule id="root" scope="public">
+       <one-of>
+         <item>main menu</item>
+	 <item> start over</item>
+       </one-of>
+    </rule>
+  </grammar>
+</link>
+
+
+
+
+
   <nomatch>
     I didn't understand, try talking with an American accent.
     <reprompt/>
@@ -39,15 +54,15 @@
 
 <menu id="mainMenu">
   <prompt>
-    Welcome to the main menu, please choose from; flight booking service, delayed flights, or life advice.
+    Main Menu, please choose from; flight booking service, delayed flights, or life advice.
   </prompt>
-  <choice next="flight_booking.xml">
+  <choice next="flight_booking">
     Flight booking service
   </choice>
-  <choice next="delayed_flights.xml">
+  <choice next="delayed_flights">
     delayed flights
   </choice>
-  <choice next="life_advice.xml">
+  <choice next="life_advice">
     life advice
   </choice>
   

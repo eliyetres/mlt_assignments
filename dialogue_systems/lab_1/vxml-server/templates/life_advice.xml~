@@ -14,11 +14,13 @@
   </noinput>
 
     <form id="life_Advice">
-      <block>
+        <field id="toKnow">
+            <prompt>
                 Here is some important life advice. 
                 Do not eat yellow snow. 
                 Never fight a man with a perm. 
-       <goto next="lab1"/>
-       </block>
- </form>
+            </prompt>
+        </field>
+        <goto next="#lab1.xml">
+    </form>
 </vxml>

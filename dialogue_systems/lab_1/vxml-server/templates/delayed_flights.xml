@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
       xmlns:voxeo="http://community.voxeo.com/xmlns/vxml">
 
@@ -13,18 +12,22 @@
     <reprompt/>
   </noinput>
 
+  
+
     <form id="delayedInfo">
-        <field id="whatFlight">
-            <prompt bargein="false">Currently the following flights are delayed.
+      <block bargein="false">
+            Currently the following flights are delayed.
             London to Paris by two hours,
             Berlin to Hamburg by 40 hours,
             Moscow to London by three minutes,
-            L.A to Coventry by four hours,
+            L.A to Mogadishu by four hours,
             Rome to The Moon by about fifty years,
-            Brexit will also be delayed by about four years, good luck. 
-            </prompt>
-        </field>
-        <submit fetchaudio="/templates/metal.wav">
-        <goto next="#lab1.xml">
+      
+      </block>
+      
+      <block>
+	<goto next="lab1"/>
+      </block>
+      
     </form>
 </vxml>

@@ -40,7 +40,7 @@ def flight_booking():
     vxml = render_template('flight_booking.xml')
     response = make_response(vxml)
     response.headers["Content-Type"] = "application/xml"
-    return response 
+    return 
     
 @app.route('/life_advice')
 def life_advice():
