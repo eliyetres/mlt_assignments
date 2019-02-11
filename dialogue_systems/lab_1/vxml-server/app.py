@@ -28,12 +28,23 @@ def streamwav():
     return Response(generate(), mimetype="audio/x-wav")
 
 
-@app.route("/ogg")
-def streamogg():
-    def generate():
-        with open("signals/song.ogg", "rb") as fogg:
-            data = fogg.read(1024)
-            while data:
-                yield data
-                data = fogg.read(1024)
-    return Response(generate(), mimetype="audio/ogg")
+@app.route('/delayed_flights')
+def delayed_flights():
+    vxml = render_template('delayed_flights.xml')
+    response = make_response(vxml)
+    response.headers["Content-Type"] = "application/xml"
+    return response
+
+@app.route('/flight_booking')
+def flight_booking():
+    vxml = render_template('flight_booking.xml')
+    response = make_response(vxml)
+    response.headers["Content-Type"] = "application/xml"
+    return 
+    
+@app.route('/life_advice')
+def life_advice():
+    vxml = render_template('life_advice.xml')
+    response = make_response(vxml)
+    response.headers["Content-Type"] = "application/xml"
+    return response
