@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
+      xmlns:voxeo="http://community.voxeo.com/xmlns/vxml">
+
+  <nomatch>
+    I didn't understand, try talking with an American accent.
+    <reprompt/>
+  </nomatch>
+  
+  <noinput>
+    Speak up drongo!
+    <reprompt/>
+  </noinput>
+
+  <!-- Data model -->
+  <var name="from" />
+  <var name="to" />
+  <var name="when"/>
+  <var name="isRetrun"/>
+  <var name="correct"/>
+  <var name="returnDay"/>
+
+
+  <!-- State machine -->
+  <form id="welcome">
+    <block>
+      
+      <prompt>
+	<audio src="https://instaud.io/_/3hLZ.wav"/>
+	<break time="2000" />
+	
+	Welcome to The Altered Beast flight booking service.
+
+      </prompt>
+      <goto next="#mainMenu"/>
+    </block>
+  </form>
+
+<menu id="mainMenu">
+  <prompt>
+    Welcome to the main menu, please choose from; flight booking service, delayed flights, or life advice.
+  </prompt>
+  <choice next="#askFrom">
+    Flight booking service
+  </choice>
+  <choice next="#delayedFlights">
+    delayed flights
+  </choice>
+  <choice next="#lifeAdvice">
+    life advice
+  </choice>
+  <noinput>Say something drongo!</noinput>
+</menu>
+
+<!-- flying from -->
+  <form id="askFrom">
+    <field name="fromField">
+      <prompt timeout="20s">
+        What city are you leaving from?
+      </prompt>
+      <grammar xml:lang="en-us" root="TOPLEVEL">
+	<rule id="TOPLEVEL">
+	  <one-of>
+	    <item>london</item>
+	    <item>paris</item>
+	    <item>new york</item>
+	  </one-of>
+	</rule>
+      </grammar>
+      <nomatch>
+	I'm afraid that you can only choose from London, Paris and New York.
+	Try again
+	<reprompt/>
+      </nomatch>
+    </field>
+    <filled>
+      <assign name="from" expr="fromField" />
+      <goto next="#askTo" />
+    </filled>
+  </form>
+
+<!-- flying to -->
+  <form id="askTo">
+    <field name="toField">
+      <prompt>
+        Where are you going?
+      </prompt>
+      <grammar xml:lang="en-us" root="TOPLEVEL">
+	<rule id="TOPLEVEL">
+	  <one-of>
+	    <item>london</item>
+	    <item>paris</item>
+	    <item>new york</item>
+	  </one-of>
+	</rule>
+      </grammar>
+      <nomatch>
+	I'm afraid that you can only choose from London, Paris and New York.
+	Try again
+	<reprompt/>
+      </nomatch>
+    </field>
+    <filled>
+      <assign name="to" expr="toField"/>
+      <if cond= "to==from">
+	<prompt>
+	  You can not fly to the same airport you are flying from silly.
+	  Please try again.
+	</prompt>
+	<goto next="#askTo"/>
+      <else/>
+      <goto next="#askDate" />
+    </if>
+    </filled>
+  </form>
+
+<!-- flying date -->
+  <form id="askDate">
+    <field name="dateField">
+    <prompt>
+      On what day of the week would you like to fly?
+    </prompt>
+      
+    <grammar xml:lang="en-us" root="TOPLEVEL">
+      <rule id="TOPLEVEL">
+      <one-of>
+	<item>Monday</item>
+	<item>Tuesday</item>
+	<item>Wednesday</item>
+	<item>Thursday</item>
+	<item>Friday</item>
+	<item>Saturday</item>
+	<item>Sunday</item>
+      </one-of>
+      </rule>
+      </grammar>
+    </field>
+
+    <filled>
+      <assign name="when" expr="dateField"/>
+      <goto next ="#oneWay"/>
+    </filled>
+  </form>
+
+<!-- is one one? -->
+  <form id="oneWay">
+    <field name="oneReturn">
+      <prompt>
+	Is it a return trip?
+      </prompt>
+      <option>yes</option>
+      <option>no</option>
+    </field>
+    <filled>
+      <assign name="isReturn" expr="oneReturn"/>
+      <if cond="isReturn == 'yes'">
+	<goto next ="#returnDate"/>
+	<else/>
+	<goto next ="#repeatBookingOneway"/>
+      </if>
+    </filled>
+  </form>
+
+<!-- return day -->
+  <form id="returnDate">
+    <field name="dateReturn">
+      <prompt> 
+	On what day of the week would you like to return?
+      </prompt>
+    <grammar xml:lang="en-us" root="TOPLEVEL">
+      <rule id="TOPLEVEL">
+      <one-of>
+	<item>Monday</item>
+	<item>Tuesday</item>
+	<item>Wednesday</item>
+	<item>Thursday</item>
+	<item>Friday</item>
+	<item>Saturday</item>
+	<item>Sunday</item>
+      </one-of>
+      </rule>
+      </grammar> 
+    </field>
+    <filled>
+      <assign name ="returnDay" expr="dateReturn"/>
+      <goto next="#repeatBookingReturn"/>
+    </filled>
+  </form>
+
+<!-- repeat the booking -->
+  <form id="repeatBookingOneway">
+    <field name="isCorrect">
+    <prompt bargin="false">
+      You want to go to
+      <value expr="from"/>,
+      You want to fly from
+      <value expr="to"/>,
+      and you are flying on 
+      <value expr="when"/>,
+      And it is a one way flight.
+      is this correct?
+    </prompt>
+    <option>yes</option>
+    <option>no</option>
+    </field>
+    <filled> 
+      <assign name="correct" expr="isCorrect"/>
+      <if cond="isCorrect =='yes'">
+	<prompt>
+	Your booking is now complete.
+	Thank you for using the Altered Beast flight booking service.
+	Have a nice day.
+    	<audio src="https://soundgasm.net/sounds/da9f8acb23cd864351f94e248e23e52efabcc93e.m4a"/>
+	</prompt>
+      <else/>
+      <prompt>
+	We will start over
+      </prompt>
+	  <clear namelist="to"/>
+	  <clear namelist="from"/>
+	  <clear namelist="when"/>
+	  <goto next ="#askFrom"/>
+	</if>
+      </filled>
+    </form>
+
+<!-- repeat the booking -->
+  <form id="repeatBookingReturn">
+    <field name="isCorrectReturn">
+    <prompt bargein="false" >
+      You want to go to
+      <value expr="from"/>,
+      You want to fly from
+      <value expr="to"/>,
+      and you are flying on 
+      <value expr="when"/>,
+      And you will be returning on
+      <value expr="returnDay"/>.
+      is this correct?
+    </prompt>
+    <option>yes</option>
+    <option>no</option>
+    </field>
+    <filled> 
+      <assign name="correct" expr="isCorrectReturn"/>
+      <if cond="correct =='yes'">
+        <prompt>
+	Your booking is now complete.
+	Thank you for using the Altered Beast flight booking service.
+	Have a nice day.
+	<audio src="https://soundgasm.net/sounds/da9f8acb23cd864351f94e248e23e52efabcc93e.m4a"/>
+      </prompt>
+ 
+      <else/>
+      <prompt>
+	Ok we will have to start over
+      </prompt>
+	  <clear namelist="to"/>
+	  <clear namelist="from"/>
+	  <clear namelist="when"/>
+	  <goto next ="#askFrom"/>
+	</if>
+      </filled>
+    </form>
+
+    <form id=:"delayedFlights">
+      <field id="flightInfo">
+	
+  </vxml>
