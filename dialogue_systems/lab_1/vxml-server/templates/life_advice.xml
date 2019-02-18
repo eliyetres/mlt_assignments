@@ -17,7 +17,9 @@
       <block>
                 Here is some important life advice. 
                 Do not eat yellow snow. 
-                Never fight a man with a perm. 
+                Do not be late to your flight.
+		Don't count your chickens before they hatch. 
+		
        <goto next="lab1"/>
        </block>
  </form>
